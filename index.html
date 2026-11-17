@@ -2,11 +2,87 @@
 <html lang="ja">
 <head>
   <meta charset="UTF-8">
-  <title>にゃんこ大戦争 ブラウザゲーム</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#172033">
+  <title>ねこねこ防衛隊｜レーンバトル</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <div id="game-container"></div>
+  <main class="game-shell">
+    <header class="topbar">
+      <a class="brand" href="#" aria-label="ねこねこ防衛隊 ホーム">
+        <span class="brand-mark" aria-hidden="true">N</span>
+        <span><strong>ねこねこ防衛隊</strong><small>LANE BATTLE</small></span>
+      </a>
+      <div class="top-actions">
+        <span class="status-pill"><span class="status-dot"></span>防衛中</span>
+        <button class="icon-button" id="pause-button" type="button" aria-label="ゲームを一時停止">Ⅱ</button>
+        <button class="icon-button" id="restart-button" type="button" aria-label="ゲームを最初からやり直す">↻</button>
+      </div>
+    </header>
+
+    <section class="battle-section" aria-label="バトル画面">
+      <div class="battle-heading">
+        <div>
+          <p class="eyebrow">FRONT LINE / 01</p>
+          <h1>おうちを守りぬけ！</h1>
+        </div>
+        <div class="wave-badge"><span>WAVE</span><strong id="wave-label">01</strong></div>
+      </div>
+
+      <div class="battlefield-wrap">
+        <canvas id="battlefield" width="1000" height="440" aria-label="ねこチームとモンスターが戦うバトルフィールド">
+          お使いのブラウザはキャンバスに対応していません。
+        </canvas>
+        <div class="field-label field-label-home">NEKO BASE</div>
+        <div class="field-label field-label-foe">WILD SIDE</div>
+        <div class="battle-message" id="battle-message" role="status" aria-live="polite"></div>
+      </div>
+
+      <div class="battle-stats">
+        <div class="base-stat">
+          <span class="stat-icon home-icon" aria-hidden="true">⌂</span>
+          <div class="stat-copy"><span>ねこのおうち</span><strong id="home-hp-label">1000 / 1000</strong></div>
+          <div class="health-track"><span id="home-hp-bar"></span></div>
+        </div>
+        <div class="energy-stat">
+          <div class="energy-title"><span>🐟</span> おさかなエナジー <strong id="energy-label">100</strong><small>/ 200</small></div>
+          <div class="energy-track"><span id="energy-bar"></span></div>
+        </div>
+        <div class="base-stat enemy-stat">
+          <span class="stat-icon enemy-icon" aria-hidden="true">✦</span>
+          <div class="stat-copy"><span>あいての基地</span><strong id="enemy-hp-label">1200 / 1200</strong></div>
+          <div class="health-track"><span id="enemy-hp-bar"></span></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="unit-section" aria-labelledby="unit-heading">
+      <div class="unit-heading-row">
+        <div><p class="eyebrow">YOUR LITTLE HEROES</p><h2 id="unit-heading">なかまを出撃！</h2></div>
+        <p class="unit-hint">ユニットを選ぶとすぐに出撃します</p>
+      </div>
+      <div class="unit-list">
+        <button class="unit-card" type="button" data-unit="scout" aria-label="ちびねこを出撃。コスト50">
+          <span class="unit-art scout-art" aria-hidden="true"><i></i><b></b></span>
+          <span class="unit-info"><strong>ちびねこ</strong><small>すばやい突撃役</small></span>
+          <span class="unit-cost"><span>🐟</span> 50</span>
+        </button>
+        <button class="unit-card" type="button" data-unit="guard" aria-label="まもりねこを出撃。コスト90">
+          <span class="unit-art guard-art" aria-hidden="true"><i></i><b></b></span>
+          <span class="unit-info"><strong>まもりねこ</strong><small>たよりになる盾役</small></span>
+          <span class="unit-cost"><span>🐟</span> 90</span>
+        </button>
+        <button class="unit-card" type="button" data-unit="mage" aria-label="ほしねこを出撃。コスト75">
+          <span class="unit-art mage-art" aria-hidden="true"><i></i><b></b></span>
+          <span class="unit-info"><strong>ほしねこ</strong><small>遠くから魔法攻撃</small></span>
+          <span class="unit-cost"><span>🐟</span> 75</span>
+        </button>
+      </div>
+      <div class="tip"><span aria-hidden="true">✦</span> エナジーは時間とともに回復。仲間をバランスよく出撃させよう。</div>
+    </section>
+    <footer>ねこねこ防衛隊 <span>・</span> みんなでおうちを守ろう</footer>
+  </main>
   <script src="app.js"></script>
 </body>
 </html>

@@ -12,28 +12,78 @@ const restartButton = document.querySelector("#restart-button");
 const message = document.querySelector("#battle-message");
 const statusPill = document.querySelector(".status-pill");
 const unitButtons = [...document.querySelectorAll(".unit-card")];
+const screens = {
+  home: document.querySelector("#home-screen"),
+  battle: document.querySelector("#battle-screen"),
+  powerup: document.querySelector("#powerup-screen"),
+  formation: document.querySelector("#formation-screen")
+};
+const pageLabel = document.querySelector("#page-label");
+const navButtons = [...document.querySelectorAll(".nav-button")];
+const coinLabels = [document.querySelector("#coin-label"), document.querySelector("#upgrade-coin-label")];
+const upgradeButtons = [...document.querySelectorAll(".upgrade-button")];
+const rosterButtons = [...document.querySelectorAll(".roster-card")];
 
 const WIDTH = canvas.width;
 const HEIGHT = canvas.height;
 const GROUND_Y = 340;
 const bases = { home: { x: 91, hp: 1000, maxHp: 1000 }, enemy: { x: 909, hp: 1200, maxHp: 1200 } };
 const unitTypes = {
-  scout: { name: "ちびねこ", cost: 50, hp: 100, damage: 24, speed: 47, range: 32, cooldown: 0.8, color: "#fffaf0", accent: "#8b73e8" },
-  guard: { name: "まもりねこ", cost: 90, hp: 280, damage: 19, speed: 23, range: 34, cooldown: 1.15, color: "#ffe5d4", accent: "#ef8a69" },
-  mage: { name: "ほしねこ", cost: 75, hp: 85, damage: 37, speed: 25, range: 150, cooldown: 1.7, color: "#eff7ff", accent: "#63a6e8" }
+  scout: { name: "ちびねこ", cost: 50, hp: 100, damage: 24, speed: 47, range: 32, cooldown: 0.8, color: "#fffaf0", accent: "#8b73e8", level: 1 },
+  guard: { name: "まもりねこ", cost: 90, hp: 280, damage: 19, speed: 23, range: 34, cooldown: 1.15, color: "#ffe5d4", accent: "#ef8a69", level: 1 },
+  mage: { name: "ほしねこ", cost: 75, hp: 85, damage: 37, speed: 25, range: 150, cooldown: 1.7, color: "#eff7ff", accent: "#63a6e8", level: 1 }
 };
 
 let units = [];
 let effects = [];
 let energy = 100;
+let coins = 1250;
 let elapsed = 0;
 let spawnTimer = 3;
 let enemyCount = 0;
 let paused = false;
 let gameOver = false;
+let currentScreen = "home";
+let hasStartedBattle = false;
+let selectedUnits = new Set(["scout", "guard", "mage"]);
 let uiTimer = 0;
 let lastFrame = 0;
 let animationTime = 0;
+
+function showScreen(name) {
+  const screen = screens[name];
+  if (!screen) return;
+  currentScreen = name;
+  for (const [screenName, element] of Object.entries(screens)) {
+    const active = screenName === name;
+    element.hidden = !active;
+    element.classList.toggle("active", active);
+  }
+  for (const button of navButtons) {
+    const active = button.dataset.screen === name;
+    button.classList.toggle("active", active);
+    if (active) button.setAttribute("aria-current", "page");
+    else button.removeAttribute("aria-current");
+  }
+  pageLabel.textContent = { home: "ホーム", battle: "バトル", powerup: "パワーアップ", formation: "キャラ編成" }[name];
+  if (name === "battle") renderHud();
+}
+
+function renderCoins() {
+  for (const label of coinLabels) label.textContent = coins.toLocaleString("ja-JP");
+}
+
+function renderFormation() {
+  document.querySelector("#formation-count").textContent = selectedUnits.size;
+  for (const button of rosterButtons) {
+    const selected = selectedUnits.has(button.dataset.roster);
+    button.classList.toggle("selected", selected);
+    button.setAttribute("aria-pressed", String(selected));
+  }
+  for (const button of unitButtons) {
+    button.hidden = !selectedUnits.has(button.dataset.unit);
+  }
+}
 
 function resetGame() {
   units = [];
@@ -152,6 +202,10 @@ function updateBattle(dt) {
 
 function finishGame(won) {
   gameOver = true;
+  if (won) {
+    coins += 120;
+    renderCoins();
+  }
   message.textContent = won ? "おうちを守りきった！" : "おうちがピンチ…";
   message.classList.add("visible");
   statusPill.innerHTML = `<span class="status-dot"></span>${won ? "勝利！" : "防衛失敗"}`;
@@ -168,6 +222,27 @@ function renderHud() {
   waveLabel.textContent = String(Math.floor(elapsed / 25) + 1).padStart(2, "0");
   for (const button of unitButtons) {
     button.disabled = paused || gameOver || energy < unitTypes[button.dataset.unit].cost;
+  }
+}
+
+function upgradeUnit(button) {
+  const unit = unitTypes[button.dataset.upgrade];
+  const cost = Number(button.dataset.cost);
+  if (!unit || !Number.isFinite(cost) || coins < cost) return;
+
+  coins -= cost;
+  unit.level += 1;
+  if (button.dataset.upgrade === "guard") unit.hp += 30;
+  else unit.damage += button.dataset.upgrade === "mage" ? 8 : 5;
+
+  const card = button.closest(".upgrade-card");
+  card.querySelector(".upgrade-details strong span").textContent = `Lv. ${unit.level}`;
+  card.querySelector(".upgrade-progress i").style.width = `${Math.min(100, 25 + (unit.level - 1) * 15)}%`;
+  button.querySelector("span").textContent = `${cost + 60} ✦`;
+  button.dataset.cost = String(cost + 60);
+  renderCoins();
+  for (const upgradeButton of upgradeButtons) {
+    upgradeButton.disabled = coins < Number(upgradeButton.dataset.cost);
   }
 }
 
@@ -420,13 +495,44 @@ function frame(timestamp) {
   const dt = Math.min((timestamp - lastFrame) / 1000 || 0, 0.05);
   lastFrame = timestamp;
   animationTime += dt;
-  if (!paused && !gameOver) updateBattle(dt);
-  draw();
+  if (currentScreen === "battle") {
+    if (!paused && !gameOver) updateBattle(dt);
+    draw();
+  }
   requestAnimationFrame(frame);
+}
+
+for (const button of document.querySelectorAll("[data-screen]")) {
+  button.addEventListener("click", event => {
+    if (button.tagName === "A") event.preventDefault();
+    const screen = button.dataset.screen;
+    if (screen === "battle" && (!hasStartedBattle || gameOver)) {
+      resetGame();
+      hasStartedBattle = true;
+    }
+    showScreen(screen);
+  });
 }
 
 for (const button of unitButtons) {
   button.addEventListener("click", () => deploy(button.dataset.unit));
+}
+
+for (const button of upgradeButtons) {
+  button.addEventListener("click", () => upgradeUnit(button));
+}
+
+for (const button of rosterButtons) {
+  button.addEventListener("click", () => {
+    const id = button.dataset.roster;
+    if (selectedUnits.has(id)) {
+      if (selectedUnits.size === 1) return;
+      selectedUnits.delete(id);
+    } else if (selectedUnits.size < 5) {
+      selectedUnits.add(id);
+    }
+    renderFormation();
+  });
 }
 
 pauseButton.addEventListener("click", () => {
@@ -441,4 +547,7 @@ pauseButton.addEventListener("click", () => {
 restartButton.addEventListener("click", resetGame);
 
 resetGame();
+renderCoins();
+renderFormation();
+showScreen("home");
 requestAnimationFrame(frame);

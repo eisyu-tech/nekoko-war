@@ -3,94 +3,142 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
-  <meta name="theme-color" content="#2b1d10">
-  <title>ねこねこ大戦争</title>
+  <meta name="theme-color" content="#2b1a0d">
+  <title>しろくろねこ大戦線</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
   <div id="app">
-    <header class="top-hud">
-      <button class="hud-btn" id="back-btn" type="button" aria-label="戻る">←</button>
-      <div class="hud-title"><small id="hud-sub">STAGE SELECT</small><strong id="hud-title">日本編 第1章</strong></div>
-      <div class="hud-right">
-        <div class="pill"><span>XP</span><b id="xp-label">1200</b></div>
-        <div class="pill gold"><span>NP</span><b id="np-label">50</b></div>
+    <div id="rotate-hint" aria-hidden="true">横向きでプレイ推奨</div>
+
+    <!-- Title -->
+    <section id="screen-title" class="screen active">
+      <div class="title-bg"></div>
+      <div class="title-ui">
+        <div class="logo">
+          <div class="logo-sub">SHIROKURO NEKO FRONTLINE</div>
+          <h1>しろくろ<br><span>ねこ大戦線</span></h1>
+        </div>
+        <div class="menu-buttons">
+          <button class="menu-btn primary" data-nav="stages">戦闘開始（出陣）</button>
+          <button class="menu-btn" data-nav="upgrade">パワーアップ</button>
+          <button class="menu-btn" data-nav="equip">キャラ編成</button>
+        </div>
+        <div class="title-footer">
+          <button id="mute-btn-title" class="mini-btn">♪ ON</button>
+          <span class="note">オリジナル手描き風ゲーム</span>
+        </div>
       </div>
-    </header>
+    </section>
 
-    <main class="screens">
-      <section class="screen active" id="screen-title" data-screen="title">
-        <div class="title-card">
-          <p class="logo-sub">NEKO NEKO GREAT WAR</p>
-          <h1>ねこねこ<br><span>大戦争</span></h1>
-          <div class="title-cats" aria-hidden="true">🐱 ⚔️ 🐶</div>
-          <button class="big-btn" data-go="stages">スタート</button>
-          <button class="big-btn alt" data-go="upgrade">にゃんこガチャ/強化</button>
-          <p class="title-note">※オリジナル作品のブラウザ版デモです</p>
-        </div>
-      </section>
+    <!-- Stages -->
+    <section id="screen-stages" class="screen">
+      <header class="sub-header">
+        <button class="back-btn" data-nav="title">←もどる</button>
+        <h2>日本編ステージ選択</h2>
+        <div class="xp-badge">XP <b id="xp-stages">0</b></div>
+      </header>
+      <div class="map-area">
+        <svg class="japan-map" viewBox="0 0 400 260" preserveAspectRatio="xMidYMid meet" aria-hidden="true">
+          <rect x="0" y="0" width="400" height="260" fill="#bfe6ff"/>
+          <ellipse cx="200" cy="210" rx="170" ry="30" fill="#8fd3ff" opacity=".6"/>
+          <path d="M120 70 L170 40 L230 50 L270 80 L310 70 L330 110 L300 150 L320 190 L260 210 L210 180 L170 200 L120 170 L90 130 Z" fill="#7ed957" stroke="#3f7a2a" stroke-width="4"/>
+          <path d="M250 95 L290 90 L305 120 L275 140 Z" fill="#74cf50" stroke="#3f7a2a" stroke-width="3"/>
+          <text x="200" y="145" text-anchor="middle" font-size="26" font-weight="900" fill="#2f5f1f" opacity=".25">JAPAN</text>
+        </svg>
+        <div id="stage-nodes" class="stage-nodes"></div>
+      </div>
+    </section>
 
-      <section class="screen" id="screen-stages" data-screen="stages">
-        <div class="panel-head">
-          <h2>ステージ選択</h2>
-          <p>敵城を叩け！お金を貯めてネコを生産！</p>
-        </div>
-        <div class="stage-list" id="stage-list"></div>
-      </section>
+    <!-- Upgrade -->
+    <section id="screen-upgrade" class="screen">
+      <header class="sub-header">
+        <button class="back-btn" data-nav="title">←もどる</button>
+        <h2>パワーアップ</h2>
+        <div class="xp-badge">XP <b id="xp-upgrade">0</b></div>
+      </header>
+      <div class="upgrade-tabs">
+        <button class="tab active" data-tab="units">キャラ</button>
+        <button class="tab" data-tab="base">お城・砲</button>
+      </div>
+      <div id="upgrade-list-units" class="list-pane active"></div>
+      <div id="upgrade-list-base" class="list-pane"></div>
+    </section>
 
-      <section class="screen" id="screen-upgrade" data-screen="upgrade">
-        <div class="panel-head">
-          <h2>基本キャラ強化</h2>
-          <p>XPを使ってレベルアップ。編成画面で出撃設定。</p>
-        </div>
-        <div class="upgrade-list" id="upgrade-list"></div>
-      </section>
+    <!-- Equip -->
+    <section id="screen-equip" class="screen">
+      <header class="sub-header">
+        <button class="back-btn" data-nav="title">←もどる</button>
+        <h2>キャラ編成</h2>
+        <div class="xp-badge">出撃枠 <b id="slot-count">0</b>/5</div>
+      </header>
+      <div class="equip-top">
+        <div id="equip-slots" class="equip-slots"></div>
+      </div>
+      <div id="equip-pool" class="equip-pool"></div>
+      <div class="equip-bottom"><button class="menu-btn primary" data-nav="stages">決定して出陣へ</button></div>
+    </section>
 
-      <section class="screen" id="screen-equip" data-screen="equip">
-        <div class="panel-head">
-          <h2>編成</h2>
-          <p>出撃スロット（最大5体）を選択</p>
+    <!-- Battle -->
+    <section id="screen-battle" class="screen">
+      <div class="battle-hud">
+        <div class="hud-left">
+          <button id="pause-btn" class="hud-circle" title="一時停止">Ⅱ</button>
+          <button id="speed-btn" class="hud-circle" title="倍速">▶1</button>
+          <button id="mute-btn-battle" class="hud-circle small" title="ミュート">♪</button>
         </div>
-        <div class="equip-slots" id="equip-slots"></div>
-        <div class="equip-pool" id="equip-pool"></div>
-        <button class="big-btn" data-go="stages">決定</button>
-      </section>
-
-      <section class="screen battle-screen" id="screen-battle" data-screen="battle">
-        <div class="battle-top">
-          <div class="base-hp enemy"><span>敵城</span><div class="bar"><i id="enemy-hp-bar"></i></div></div>
-          <button class="speed-btn" id="speed-btn" type="button">▶×1</button>
-          <button class="pause-btn" id="pause-btn" type="button">Ⅱ</button>
+        <div class="hud-center">
+          <div class="stage-name" id="battle-stage-name">ステージ</div>
         </div>
-        <div class="battle-wrap">
-          <canvas id="game" width="1280" height="420"></canvas>
-          <div class="battle-overlay" id="battle-overlay"></div>
-        </div>
-        <div class="battle-bottom">
-          <div class="money-row">
-            <div class="wallet">
-              <div class="wallet-label">所持金 <b id="money-label">0</b> / <span id="wallet-max">1000</span></div>
-              <div class="wallet-bar"><i id="money-bar"></i></div>
-            </div>
-            <button class="worker-btn" id="worker-btn" type="button">
-              <strong>働きネコ Lv.<span id="worker-lv">1</span></strong>
-              <small>レベルUP <b id="worker-cost">100</b>円</small>
-            </button>
-            <button class="cannon-btn" id="cannon-btn" type="button">
-              <strong>ネコカンノン</strong>
-              <div class="cannon-charge"><i id="cannon-bar"></i></div>
-            </button>
+        <div class="hud-right">
+          <div class="money-box">
+            <div class="money-label">所持金 / 最大</div>
+            <div class="money-value"><span id="money-now">0</span> / <span id="money-max">0</span>円</div>
           </div>
-          <div class="deploy-row" id="deploy-row"></div>
         </div>
-      </section>
-    </main>
+      </div>
 
-    <nav class="bottom-nav" id="bottom-nav">
-      <button class="nav-btn active" data-go="stages"><i>🗺</i><span>ステージ</span></button>
-      <button class="nav-btn" data-go="equip"><i>📋</i><span>編成</span></button>
-      <button class="nav-btn" data-go="upgrade"><i>⬆</i><span>強化</span></button>
-    </nav>
+      <div class="battle-field-wrap">
+        <canvas id="battle-canvas" width="1280" height="520"></canvas>
+        <div id="battle-msg" class="battle-msg"></div>
+        <div id="result-overlay" class="result-overlay">
+          <div class="result-card">
+            <h3 id="result-title">勝利！</h3>
+            <p id="result-desc"></p>
+            <div class="result-actions">
+              <button class="menu-btn" data-nav="stages">ステージ選択</button>
+              <button class="menu-btn primary" id="retry-btn">もう一度</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="battle-controls">
+        <div class="ctrl-left">
+          <button id="worker-btn" class="worker-btn">
+            <div class="worker-icon">働</div>
+            <div class="worker-info">
+              <div class="worker-lv">働きネコ Lv.<span id="worker-lv">1</span></div>
+              <div class="worker-bar"><i id="worker-bar"></i></div>
+              <div class="worker-cost"><span id="worker-cost">0</span>円</div>
+            </div>
+          </button>
+        </div>
+        <div class="ctrl-center" id="deploy-slots"></div>
+        <div class="ctrl-right">
+          <button id="cannon-btn" class="cannon-btn">
+            <svg viewBox="0 0 100 100" class="cannon-ring">
+              <circle cx="50" cy="50" r="44" class="ring-bg"/>
+              <circle cx="50" cy="50" r="44" class="ring-fg" id="cannon-ring-fg"/>
+            </svg>
+            <div class="cannon-inner">
+              <div class="cannon-label">ねこ砲</div>
+              <div class="cannon-state" id="cannon-state">CHARGE</div>
+            </div>
+          </button>
+        </div>
+      </div>
+    </section>
   </div>
   <script src="app.js"></script>
 </body>

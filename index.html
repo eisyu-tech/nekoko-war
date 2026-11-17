@@ -2,156 +2,95 @@
 <html lang="ja">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <meta name="theme-color" content="#111827">
-  <title>ねこねこ防衛隊｜おうちを守ろう</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+  <meta name="theme-color" content="#2b1d10">
+  <title>ねこねこ大戦争</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <div class="game-shell">
-    <header class="topbar">
-      <a class="brand" href="#" data-screen="home" aria-label="ねこねこ防衛隊 ホーム">
-        <span class="brand-mark" aria-hidden="true"><span>にゃ</span></span>
-        <span class="brand-copy"><strong>ねこねこ防衛隊</strong></span>
-      </a>
-      <div class="breadcrumb"><strong id="page-label">ホーム</strong></div>
-      <div class="top-actions">
-        <div class="currency-chip"><span class="coin-icon" aria-hidden="true">✦</span><span id="coin-label">1,250</span></div>
+  <div id="app">
+    <header class="top-hud">
+      <button class="hud-btn" id="back-btn" type="button" aria-label="戻る">←</button>
+      <div class="hud-title"><small id="hud-sub">STAGE SELECT</small><strong id="hud-title">日本編 第1章</strong></div>
+      <div class="hud-right">
+        <div class="pill"><span>XP</span><b id="xp-label">1200</b></div>
+        <div class="pill gold"><span>NP</span><b id="np-label">50</b></div>
       </div>
     </header>
 
-    <nav class="main-nav" aria-label="メインメニュー">
-      <button class="nav-button" type="button" data-screen="home"><span class="nav-icon home-icon" aria-hidden="true">⌂</span><span>ホーム</span></button>
-      <button class="nav-button" type="button" data-screen="battle"><span class="nav-icon battle-icon" aria-hidden="true">⚔</span><span>戦闘</span></button>
-      <button class="nav-button" type="button" data-screen="powerup"><span class="nav-icon upgrade-icon" aria-hidden="true">✦</span><span>強化</span></button>
-      <button class="nav-button" type="button" data-screen="formation"><span class="nav-icon formation-icon" aria-hidden="true">♟</span><span>編成</span></button>
-    </nav>
+    <main class="screens">
+      <section class="screen active" id="screen-title" data-screen="title">
+        <div class="title-card">
+          <p class="logo-sub">NEKO NEKO GREAT WAR</p>
+          <h1>ねこねこ<br><span>大戦争</span></h1>
+          <div class="title-cats" aria-hidden="true">🐱 ⚔️ 🐶</div>
+          <button class="big-btn" data-go="stages">スタート</button>
+          <button class="big-btn alt" data-go="upgrade">にゃんこガチャ/強化</button>
+          <p class="title-note">※オリジナル作品のブラウザ版デモです</p>
+        </div>
+      </section>
 
-    <main class="main-panel">
-      <div class="screen-scroll">
-        <section class="screen home-screen active" id="home-screen" aria-labelledby="home-heading">
-          <div class="welcome-row">
-            <div>
-              <p class="eyebrow"><span class="eyebrow-star">✦</span> NEKO GUARDIANS <span class="eyebrow-line"></span> STAGE 01</p>
-              <h1 id="home-heading">おかえり、ねこ隊長！</h1>
-              <p class="welcome-subtitle">今日もみんなで、おうちを守ろう。</p>
+      <section class="screen" id="screen-stages" data-screen="stages">
+        <div class="panel-head">
+          <h2>ステージ選択</h2>
+          <p>敵城を叩け！お金を貯めてネコを生産！</p>
+        </div>
+        <div class="stage-list" id="stage-list"></div>
+      </section>
+
+      <section class="screen" id="screen-upgrade" data-screen="upgrade">
+        <div class="panel-head">
+          <h2>基本キャラ強化</h2>
+          <p>XPを使ってレベルアップ。編成画面で出撃設定。</p>
+        </div>
+        <div class="upgrade-list" id="upgrade-list"></div>
+      </section>
+
+      <section class="screen" id="screen-equip" data-screen="equip">
+        <div class="panel-head">
+          <h2>編成</h2>
+          <p>出撃スロット（最大5体）を選択</p>
+        </div>
+        <div class="equip-slots" id="equip-slots"></div>
+        <div class="equip-pool" id="equip-pool"></div>
+        <button class="big-btn" data-go="stages">決定</button>
+      </section>
+
+      <section class="screen battle-screen" id="screen-battle" data-screen="battle">
+        <div class="battle-top">
+          <div class="base-hp enemy"><span>敵城</span><div class="bar"><i id="enemy-hp-bar"></i></div></div>
+          <button class="speed-btn" id="speed-btn" type="button">▶×1</button>
+          <button class="pause-btn" id="pause-btn" type="button">Ⅱ</button>
+        </div>
+        <div class="battle-wrap">
+          <canvas id="game" width="1280" height="420"></canvas>
+          <div class="battle-overlay" id="battle-overlay"></div>
+        </div>
+        <div class="battle-bottom">
+          <div class="money-row">
+            <div class="wallet">
+              <div class="wallet-label">所持金 <b id="money-label">0</b> / <span id="wallet-max">1000</span></div>
+              <div class="wallet-bar"><i id="money-bar"></i></div>
             </div>
-            <div class="daily-badge"><span aria-hidden="true">☀</span><span><strong>防衛日和</strong><small>のんびりいこう！</small></span></div>
+            <button class="worker-btn" id="worker-btn" type="button">
+              <strong>働きネコ Lv.<span id="worker-lv">1</span></strong>
+              <small>レベルUP <b id="worker-cost">100</b>円</small>
+            </button>
+            <button class="cannon-btn" id="cannon-btn" type="button">
+              <strong>ネコカンノン</strong>
+              <div class="cannon-charge"><i id="cannon-bar"></i></div>
+            </button>
           </div>
-
-          <section class="hero-card" aria-label="ステージ案内">
-            <div class="hero-sky">
-              <div class="hero-sun"></div>
-              <div class="hero-cloud cloud-one"></div><div class="hero-cloud cloud-two"></div>
-              <div class="hero-hill hill-back"></div><div class="hero-hill hill-front"></div>
-              <div class="hero-ground"></div>
-              <div class="hero-flower flower-one">✿</div><div class="hero-flower flower-two">✿</div>
-              <div class="hero-sign"><span>STAGE 01</span><strong>ぽかぽか草原</strong><small>はじめての防衛戦</small></div>
-              <div class="hero-art" aria-hidden="true">
-                <svg class="hero-cat" viewBox="0 0 220 230" role="img">
-                  <ellipse cx="112" cy="210" rx="76" ry="12" fill="#32614d" opacity=".18"/>
-                  <path d="M56 87 49 27q-1-12 10-5l39 30q12-4 24 0l39-30q11-7 10 5l-7 60" fill="#fff9ed" stroke="#584d51" stroke-width="6" stroke-linejoin="round"/>
-                  <path d="m58 43 24 19-20 5zm103 0-24 19 20 5z" fill="#f3a5a1"/>
-                  <path d="M51 92q0-24 24-31 31-10 67 0 25 7 26 31l-4 76q-2 26-55 27-54-1-56-27z" fill="#fff9ed" stroke="#584d51" stroke-width="6"/>
-                  <path d="M79 118q0-9 7-9t7 9" fill="none" stroke="#584d51" stroke-width="6" stroke-linecap="round"/>
-                  <path d="M125 118q0-9 7-9t7 9" fill="none" stroke="#584d51" stroke-width="6" stroke-linecap="round"/>
-                  <path d="m103 131 7 5 7-5" fill="#f28f94" stroke="#584d51" stroke-width="3" stroke-linejoin="round"/>
-                  <path d="M110 136q-1 12-11 12m11-12q1 12 11 12" fill="none" stroke="#584d51" stroke-width="3" stroke-linecap="round"/>
-                  <path d="M80 128H51m29 7-28 8m88-15h29m-29 7 28 8" stroke="#887b76" stroke-width="2.5" stroke-linecap="round"/>
-                  <path d="M77 174q32 12 65 0" fill="none" stroke="#edb7a4" stroke-width="5" stroke-linecap="round"/>
-                  <path d="M80 191q-8 12-14 9m79-9q8 12 14 9" fill="none" stroke="#584d51" stroke-width="5" stroke-linecap="round"/>
-                  <path d="M43 165q-26-3-18 17 7 15 24 2" fill="none" stroke="#584d51" stroke-width="7" stroke-linecap="round"/>
-                  <path d="M77 74q34-17 68 0" fill="none" stroke="#f1c766" stroke-width="9" stroke-linecap="round"/>
-                  <path d="m102 63 8-13 9 13" fill="#f1c766" stroke="#c28c3d" stroke-width="3" stroke-linejoin="round"/>
-                  <path d="m34 83 4-9 4 9 9 4-9 4-4 9-4-9-9-4zM173 76l3-7 3 7 7 3-7 3-3 7-3-7-7-3z" fill="#fff5c7"/>
-                </svg>
-                <span class="hero-spark spark-one">✦</span><span class="hero-spark spark-two">✧</span>
-              </div>
-              <div class="hero-bottom">
-                <div class="stage-progress"><span class="progress-kicker">ぼうけんの進みぐあい</span><div class="progress-track"><span></span></div><small>1 / 5 ステージ</small></div>
-                <div class="stage-enemy"><span class="enemy-face" aria-hidden="true">◉</span><span>あいてのなかま<strong>3 しゅるい</strong></span></div>
-              </div>
-            </div>
-            <div class="hero-copy">
-              <div class="stage-tag"><span class="stage-pulse"></span> いつでも挑戦できます</div>
-              <h2>ぽかぽか草原を<br><span>守りぬこう！</span></h2>
-              <p>ちいさな仲間たちと力をあわせて、<br>あいての基地をめざそう。</p>
-              <div class="hero-reward"><span class="reward-medal" aria-hidden="true">✦</span><span><small>クリアほうしゅう</small><strong>コイン <b>+120</b></strong></span><span class="reward-arrow">›</span></div>
-              <button class="primary-button launch-button" type="button" data-screen="battle"><span>戦闘開始</span><span class="button-arrow" aria-hidden="true">→</span></button>
-              <div class="launch-note"><span>▣</span> いつでも中断・再開できます</div>
-            </div>
-          </section>
-
-          <div class="home-bottom-grid">
-            <section class="home-panel squad-panel">
-              <div class="panel-heading"><div><p class="eyebrow">YOUR TEAM</p><h2>出撃メンバー</h2></div><button class="text-button" type="button" data-screen="formation">編成する <span>→</span></button></div>
-              <div class="squad-preview">
-                <div class="squad-cat scout-mini"><span class="mini-ear"></span><span class="mini-face">•‿•</span></div>
-                <div class="squad-cat guard-mini"><span class="mini-ear"></span><span class="mini-face">•ᴗ•</span></div>
-                <div class="squad-cat mage-mini"><span class="mini-ear"></span><span class="mini-face">•ᴗ•</span><span class="mini-star">✦</span></div>
-                <div class="squad-add">＋</div>
-                <div class="squad-caption"><strong>3 ひき</strong><small>仲間が準備できてるよ！</small></div>
-              </div>
-            </section>
-            <section class="home-panel growth-panel">
-              <div class="growth-icon" aria-hidden="true">↗</div>
-              <div class="growth-copy"><p class="eyebrow">GROW STRONGER</p><h2>もっと強くなろう</h2><p>仲間を育てて、防衛力アップ！</p></div>
-              <button class="round-arrow" type="button" data-screen="powerup" aria-label="パワーアップへ">→</button>
-            </section>
-          </div>
-          <div class="home-footer"><span>✦</span> みんなで力をあわせて、おうちを守ろう！</div>
-        </section>
-
-        <section class="screen battle-screen" id="battle-screen" aria-label="バトル画面" hidden>
-          <div class="battle-section">
-            <div class="battle-heading">
-              <div><p class="eyebrow">FRONT LINE / 01</p><h1>ぽかぽか草原を守りぬけ！</h1></div>
-              <div class="battle-heading-actions"><div class="wave-badge"><span>WAVE</span><strong id="wave-label">01</strong></div><span class="status-pill"><span class="status-dot"></span>防衛中</span><button class="icon-button" id="pause-button" type="button" aria-label="ゲームを一時停止">Ⅱ</button><button class="icon-button" id="restart-button" type="button" aria-label="ゲームを最初からやり直す">↻</button></div>
-            </div>
-            <div class="battlefield-wrap">
-              <canvas id="battlefield" width="1000" height="440" aria-label="ねこチームとモンスターが戦うバトルフィールド">お使いのブラウザはキャンバスに対応していません。</canvas>
-              <div class="field-label field-label-home">NEKO BASE</div><div class="field-label field-label-foe">WILD SIDE</div><div class="battle-message" id="battle-message" role="status" aria-live="polite"></div>
-            </div>
-            <div class="battle-stats">
-              <div class="base-stat"><span class="stat-icon home-icon" aria-hidden="true">⌂</span><div class="stat-copy"><span>ねこのおうち</span><strong id="home-hp-label">1000 / 1000</strong></div><div class="health-track"><span id="home-hp-bar"></span></div></div>
-              <div class="energy-stat"><div class="energy-title"><span>🐟</span> おさかなエナジー <strong id="energy-label">100</strong><small>/ 200</small></div><div class="energy-track"><span id="energy-bar"></span></div></div>
-              <div class="base-stat enemy-stat"><span class="stat-icon enemy-icon" aria-hidden="true">✦</span><div class="stat-copy"><span>あいての基地</span><strong id="enemy-hp-label">1200 / 1200</strong></div><div class="health-track"><span id="enemy-hp-bar"></span></div></div>
-            </div>
-          </div>
-          <section class="unit-section" aria-labelledby="unit-heading">
-            <div class="unit-heading-row"><div><p class="eyebrow">YOUR LITTLE HEROES</p><h2 id="unit-heading">なかまを出撃！</h2></div><p class="unit-hint">ユニットを選ぶとすぐに出撃します</p></div>
-            <div class="unit-list">
-              <button class="unit-card" type="button" data-unit="scout" aria-label="ちびねこを出撃。コスト50"><span class="unit-art scout-art" aria-hidden="true"><i></i><b></b></span><span class="unit-info"><strong>ちびねこ</strong><small>すばやい突撃役</small></span><span class="unit-cost"><span>🐟</span> 50</span></button>
-              <button class="unit-card" type="button" data-unit="guard" aria-label="まもりねこを出撃。コスト90"><span class="unit-art guard-art" aria-hidden="true"><i></i><b></b></span><span class="unit-info"><strong>まもりねこ</strong><small>たよりになる盾役</small></span><span class="unit-cost"><span>🐟</span> 90</span></button>
-              <button class="unit-card" type="button" data-unit="mage" aria-label="ほしねこを出撃。コスト75"><span class="unit-art mage-art" aria-hidden="true"><i></i><b></b></span><span class="unit-info"><strong>ほしねこ</strong><small>遠くから魔法攻撃</small></span><span class="unit-cost"><span>🐟</span> 75</span></button>
-            </div>
-            <div class="tip"><span aria-hidden="true">✦</span> エナジーは時間とともに回復。仲間をバランスよく出撃させよう。</div>
-          </section>
-        </section>
-
-        <section class="screen simple-screen" id="powerup-screen" aria-labelledby="powerup-heading" hidden>
-          <div class="page-intro"><p class="eyebrow">TRAINING GROUNDS</p><h1 id="powerup-heading">パワーアップ</h1><p>コインを使って、仲間たちをもっと強くしよう！</p></div>
-          <div class="upgrade-banner"><div class="upgrade-banner-icon">✦</div><div><span>TEAM TRAINING</span><strong>みんなの力を、ちょっとずつ。</strong><small>強化した仲間は、次のバトルから活躍するよ。</small></div><div class="upgrade-banner-art" aria-hidden="true">✧</div></div>
-          <div class="section-title"><h2>強化できるなかま</h2><span>所持コイン <strong id="upgrade-coin-label">1,250</strong> ✦</span></div>
-          <div class="upgrade-list">
-            <article class="upgrade-card"><span class="upgrade-cat scout-art"><i></i><b></b></span><div class="upgrade-details"><strong>ちびねこ <span>Lv. 1</span></strong><small>攻撃力アップ ・ すばやい突撃役</small><div class="upgrade-progress"><i></i></div></div><div class="upgrade-value">攻撃力 <strong>+5</strong></div><button class="upgrade-button" type="button" data-upgrade="scout" data-cost="180">強化 <span>180 ✦</span></button></article>
-            <article class="upgrade-card"><span class="upgrade-cat guard-art"><i></i><b></b></span><div class="upgrade-details"><strong>まもりねこ <span>Lv. 1</span></strong><small>体力アップ ・ たよりになる盾役</small><div class="upgrade-progress"><i></i></div></div><div class="upgrade-value">体力 <strong>+30</strong></div><button class="upgrade-button" type="button" data-upgrade="guard" data-cost="220">強化 <span>220 ✦</span></button></article>
-            <article class="upgrade-card"><span class="upgrade-cat mage-art"><i></i><b></b></span><div class="upgrade-details"><strong>ほしねこ <span>Lv. 1</span></strong><small>攻撃力アップ ・ 遠くから魔法攻撃</small><div class="upgrade-progress"><i></i></div></div><div class="upgrade-value">攻撃力 <strong>+8</strong></div><button class="upgrade-button" type="button" data-upgrade="mage" data-cost="200">強化 <span>200 ✦</span></button></article>
-          </div>
-        </section>
-
-        <section class="screen simple-screen" id="formation-screen" aria-labelledby="formation-heading" hidden>
-          <div class="page-intro"><p class="eyebrow">TEAM ASSEMBLY</p><h1 id="formation-heading">キャラ編成</h1><p>お気に入りの仲間を選んで、出撃チームをつくろう！</p></div>
-          <div class="formation-summary"><div class="formation-count"><strong id="formation-count">3</strong><span> / 5</span></div><div><strong>出撃メンバー</strong><small>バトルに連れていけるのは最大5ひき</small></div><button class="primary-button formation-done" type="button" data-screen="home">編成完了 <span class="button-arrow">→</span></button></div>
-          <div class="section-title"><h2>なかまたち</h2><span>タップして出撃メンバーを選ぼう</span></div>
-          <div class="roster-list">
-            <button class="roster-card selected" type="button" data-roster="scout" aria-pressed="true"><span class="roster-art scout-art"><i></i><b></b></span><span class="roster-details"><strong>ちびねこ</strong><small>すばやい突撃役</small></span><span class="roster-stat">攻撃 <b>24</b></span><span class="roster-check">✓</span></button>
-            <button class="roster-card selected" type="button" data-roster="guard" aria-pressed="true"><span class="roster-art guard-art"><i></i><b></b></span><span class="roster-details"><strong>まもりねこ</strong><small>たよりになる盾役</small></span><span class="roster-stat">体力 <b>280</b></span><span class="roster-check">✓</span></button>
-            <button class="roster-card selected" type="button" data-roster="mage" aria-pressed="true"><span class="roster-art mage-art"><i></i><b></b></span><span class="roster-details"><strong>ほしねこ</strong><small>遠くから魔法攻撃</small></span><span class="roster-stat">攻撃 <b>37</b></span><span class="roster-check">✓</span></button>
-          </div>
-        </section>
-      </div>
+          <div class="deploy-row" id="deploy-row"></div>
+        </div>
+      </section>
     </main>
+
+    <nav class="bottom-nav" id="bottom-nav">
+      <button class="nav-btn active" data-go="stages"><i>🗺</i><span>ステージ</span></button>
+      <button class="nav-btn" data-go="equip"><i>📋</i><span>編成</span></button>
+      <button class="nav-btn" data-go="upgrade"><i>⬆</i><span>強化</span></button>
+    </nav>
   </div>
   <script src="app.js"></script>
 </body>

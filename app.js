@@ -18,6 +18,7 @@ const screens = {
   powerup: document.querySelector("#powerup-screen"),
   formation: document.querySelector("#formation-screen")
 };
+const screenContainer = document.querySelector(".screen-scroll");
 const pageLabel = document.querySelector("#page-label");
 const navButtons = [...document.querySelectorAll(".nav-button")];
 const coinLabels = [document.querySelector("#coin-label"), document.querySelector("#upgrade-coin-label")];
@@ -53,6 +54,7 @@ let animationTime = 0;
 function showScreen(name) {
   const screen = screens[name];
   if (!screen) return;
+  screenContainer.scrollTop = 0;
   currentScreen = name;
   for (const [screenName, element] of Object.entries(screens)) {
     const active = screenName === name;

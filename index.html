@@ -2,8 +2,8 @@
 <html lang="ja">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
-  <meta name="theme-color" content="#2b1a0d">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <meta name="theme-color" content="#120c06">
   <title>しろくろねこ大戦線</title>
   <link rel="stylesheet" href="style.css">
 </head>
@@ -41,7 +41,6 @@
           <rect x="0" y="0" width="400" height="260" fill="#bfe6ff"/>
           <ellipse cx="200" cy="210" rx="170" ry="30" fill="#8fd3ff" opacity=".6"/>
           <path d="M120 70 L170 40 L230 50 L270 80 L310 70 L330 110 L300 150 L320 190 L260 210 L210 180 L170 200 L120 170 L90 130 Z" fill="#7ed957" stroke="#3f7a2a" stroke-width="4"/>
-          <path d="M250 95 L290 90 L305 120 L275 140 Z" fill="#74cf50" stroke="#3f7a2a" stroke-width="3"/>
         </svg>
         <div id="stage-nodes" class="stage-nodes"></div>
       </div>
@@ -73,15 +72,16 @@
     </section>
 
     <section id="screen-battle" class="screen">
-      <div class="battle-hud">
+      <div class="battle-topbar">
         <div class="hud-left">
           <button id="pause-btn" class="hud-circle" title="一時停止">Ⅱ</button>
           <button id="speed-btn" class="hud-circle" title="倍速">▶1</button>
+          <button id="zoom-btn" class="hud-circle wide" title="ズーム切替">全体</button>
           <button id="mute-btn-battle" class="hud-circle small" title="ミュート">♪</button>
         </div>
         <div class="hud-center">
           <div class="stage-name" id="battle-stage-name">ステージ</div>
-          <div class="minimap" id="minimap" aria-label="ミニマップ">
+          <div class="minimap" id="minimap">
             <div class="mm-base mm-cat"></div>
             <div class="mm-base mm-enemy"></div>
             <div class="mm-view" id="mm-view"></div>
@@ -90,8 +90,8 @@
         </div>
         <div class="hud-right">
           <div class="money-box">
-            <div class="money-label">所持金 / 最大</div>
-            <div class="money-value"><span id="money-now">0</span> / <span id="money-max">0</span>円</div>
+            <div class="money-label">MONEY</div>
+            <div class="money-value"><span id="money-now">0</span><small> / </small><span id="money-max">0</span><small>円</small></div>
           </div>
         </div>
       </div>
@@ -114,23 +114,22 @@
       <div class="battle-controls">
         <div class="ctrl-left">
           <button id="worker-btn" class="worker-btn">
-            <div class="worker-icon">働</div>
-            <div class="worker-info">
-              <div class="worker-lv">働きネコ Lv.<span id="worker-lv">1</span></div>
-              <div class="worker-bar"><i id="worker-bar"></i></div>
-              <div class="worker-cost"><span id="worker-cost">0</span>円</div>
+            <svg class="ring" viewBox="0 0 100 100"><circle cx="50" cy="50" r="44" class="ring-bg"/><circle cx="50" cy="50" r="44" class="ring-fg" id="worker-ring"/></svg>
+            <div class="worker-inner">
+              <div class="w-title">働きネコ</div>
+              <div class="w-lv">Lv.<span id="worker-lv">1</span></div>
+              <div class="w-cost"><span id="worker-cost">0</span>円</div>
             </div>
           </button>
         </div>
-        <div class="ctrl-center" id="deploy-slots"></div>
+        <div class="ctrl-center-frame">
+          <div class="ctrl-center" id="deploy-slots"></div>
+        </div>
         <div class="ctrl-right">
           <button id="cannon-btn" class="cannon-btn">
-            <svg viewBox="0 0 100 100" class="cannon-ring">
-              <circle cx="50" cy="50" r="44" class="ring-bg"/>
-              <circle cx="50" cy="50" r="44" class="ring-fg" id="cannon-ring-fg"/>
-            </svg>
+            <svg class="ring" viewBox="0 0 100 100"><circle cx="50" cy="50" r="44" class="ring-bg"/><circle cx="50" cy="50" r="44" class="ring-fg" id="cannon-ring"/></svg>
             <div class="cannon-inner">
-              <div class="cannon-label">ねこ砲</div>
+              <div class="cannon-label">ネコ砲</div>
               <div class="cannon-state" id="cannon-state">CHARGE</div>
             </div>
           </button>

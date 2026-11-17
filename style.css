@@ -259,6 +259,27 @@ button:focus-visible, a:focus-visible { outline: 3px solid #aa96ff; outline-offs
   .home-footer { padding-top: 8px; }
   .battle-screen, .simple-screen { padding-top: 16px; }
 }
+@media (max-height: 850px) and (min-width: 701px) {
+  .battle-screen { padding-top: 12px; padding-bottom: 12px; }
+  .battle-section { padding: 12px 14px 10px; }
+  .battle-heading { margin-bottom: 8px; }
+  #battlefield { height: clamp(135px, calc(100dvh - 420px), 250px); aspect-ratio: auto; }
+  .battle-stats { gap: 12px; padding-top: 8px; }
+  .energy-stat { min-width: 125px; }
+  .unit-section { margin-top: 10px; padding: 12px 14px 10px; }
+  .unit-heading-row { margin-bottom: 7px; }
+  .unit-card { min-height: 52px; padding: 7px 9px; }
+}
+@media (max-height: 520px) and (min-width: 701px) {
+  .battle-screen { padding-top: 7px; padding-bottom: 7px; }
+  .battle-section { padding: 8px 10px; }
+  .battle-heading { margin-bottom: 5px; }
+  #battlefield { height: 125px; }
+  .battle-stats { gap: 8px; padding-top: 5px; }
+  .unit-section { margin-top: 7px; padding: 8px 10px; }
+  .unit-card { min-height: 46px; }
+  .tip { display: none; }
+}
 @media (max-width: 700px) {
   .game-shell { display: flex; height: 100%; min-height: 0; flex-direction: column; }
   .sidebar { order: 2; display: block; height: calc(60px + env(safe-area-inset-bottom)); min-height: calc(60px + env(safe-area-inset-bottom)); padding: 4px 8px env(safe-area-inset-bottom); box-shadow: 0 -4px 20px #11182714; }

@@ -11,7 +11,6 @@
   <div id="app">
     <div id="rotate-hint" aria-hidden="true">横向きでプレイ推奨</div>
 
-    <!-- Title -->
     <section id="screen-title" class="screen active">
       <div class="title-bg"></div>
       <div class="title-ui">
@@ -31,7 +30,6 @@
       </div>
     </section>
 
-    <!-- Stages -->
     <section id="screen-stages" class="screen">
       <header class="sub-header">
         <button class="back-btn" data-nav="title">←もどる</button>
@@ -44,13 +42,11 @@
           <ellipse cx="200" cy="210" rx="170" ry="30" fill="#8fd3ff" opacity=".6"/>
           <path d="M120 70 L170 40 L230 50 L270 80 L310 70 L330 110 L300 150 L320 190 L260 210 L210 180 L170 200 L120 170 L90 130 Z" fill="#7ed957" stroke="#3f7a2a" stroke-width="4"/>
           <path d="M250 95 L290 90 L305 120 L275 140 Z" fill="#74cf50" stroke="#3f7a2a" stroke-width="3"/>
-          <text x="200" y="145" text-anchor="middle" font-size="26" font-weight="900" fill="#2f5f1f" opacity=".25">JAPAN</text>
         </svg>
         <div id="stage-nodes" class="stage-nodes"></div>
       </div>
     </section>
 
-    <!-- Upgrade -->
     <section id="screen-upgrade" class="screen">
       <header class="sub-header">
         <button class="back-btn" data-nav="title">←もどる</button>
@@ -65,21 +61,17 @@
       <div id="upgrade-list-base" class="list-pane"></div>
     </section>
 
-    <!-- Equip -->
     <section id="screen-equip" class="screen">
       <header class="sub-header">
         <button class="back-btn" data-nav="title">←もどる</button>
         <h2>キャラ編成</h2>
         <div class="xp-badge">出撃枠 <b id="slot-count">0</b>/5</div>
       </header>
-      <div class="equip-top">
-        <div id="equip-slots" class="equip-slots"></div>
-      </div>
+      <div class="equip-top"><div id="equip-slots" class="equip-slots"></div></div>
       <div id="equip-pool" class="equip-pool"></div>
       <div class="equip-bottom"><button class="menu-btn primary" data-nav="stages">決定して出陣へ</button></div>
     </section>
 
-    <!-- Battle -->
     <section id="screen-battle" class="screen">
       <div class="battle-hud">
         <div class="hud-left">
@@ -89,6 +81,12 @@
         </div>
         <div class="hud-center">
           <div class="stage-name" id="battle-stage-name">ステージ</div>
+          <div class="minimap" id="minimap" aria-label="ミニマップ">
+            <div class="mm-base mm-cat"></div>
+            <div class="mm-base mm-enemy"></div>
+            <div class="mm-view" id="mm-view"></div>
+            <div class="mm-dots" id="mm-dots"></div>
+          </div>
         </div>
         <div class="hud-right">
           <div class="money-box">
@@ -98,8 +96,8 @@
         </div>
       </div>
 
-      <div class="battle-field-wrap">
-        <canvas id="battle-canvas" width="1280" height="520"></canvas>
+      <div class="battle-field-wrap" id="battle-wrap">
+        <canvas id="battle-canvas" width="1000" height="520"></canvas>
         <div id="battle-msg" class="battle-msg"></div>
         <div id="result-overlay" class="result-overlay">
           <div class="result-card">

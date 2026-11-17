@@ -9,51 +9,25 @@
 </head>
 <body>
   <div class="game-shell">
-    <aside class="sidebar">
+    <header class="topbar">
       <a class="brand" href="#" data-screen="home" aria-label="ねこねこ防衛隊 ホーム">
         <span class="brand-mark" aria-hidden="true"><span>にゃ</span></span>
-        <span class="brand-copy"><strong>ねこねこ防衛隊</strong><small>NEKO GUARDIANS</small></span>
+        <span class="brand-copy"><strong>ねこねこ防衛隊</strong></span>
       </a>
-
-      <div class="sidebar-caption">MENU</div>
-      <nav class="main-nav" aria-label="メインメニュー">
-        <button class="nav-button" type="button" data-screen="home">
-          <span class="nav-icon home-icon" aria-hidden="true">⌂</span>
-          <span>ホーム</span><span class="nav-arrow" aria-hidden="true">›</span>
-        </button>
-        <button class="nav-button" type="button" data-screen="battle">
-          <span class="nav-icon battle-icon" aria-hidden="true">⚔</span>
-          <span>戦闘開始</span><span class="nav-arrow" aria-hidden="true">›</span>
-        </button>
-        <button class="nav-button" type="button" data-screen="powerup">
-          <span class="nav-icon upgrade-icon" aria-hidden="true">✦</span>
-          <span>パワーアップ</span><span class="nav-arrow" aria-hidden="true">›</span>
-        </button>
-        <button class="nav-button" type="button" data-screen="formation">
-          <span class="nav-icon formation-icon" aria-hidden="true">♟</span>
-          <span>キャラ編成</span><span class="nav-arrow" aria-hidden="true">›</span>
-        </button>
-      </nav>
-
-      <div class="sidebar-bottom">
-        <div class="player-card">
-          <div class="player-avatar" aria-hidden="true">🐾</div>
-          <div class="player-copy"><strong>ねこ隊長</strong><small>ランク 1</small></div>
-          <span class="player-menu" aria-hidden="true">•••</span>
-        </div>
-        <div class="sidebar-foot"><span class="online-dot"></span>今日も防衛中！</div>
+      <div class="breadcrumb"><strong id="page-label">ホーム</strong></div>
+      <div class="top-actions">
+        <div class="currency-chip"><span class="coin-icon" aria-hidden="true">✦</span><span id="coin-label">1,250</span></div>
       </div>
-    </aside>
+    </header>
+
+    <nav class="main-nav" aria-label="メインメニュー">
+      <button class="nav-button" type="button" data-screen="home"><span class="nav-icon home-icon" aria-hidden="true">⌂</span><span>ホーム</span></button>
+      <button class="nav-button" type="button" data-screen="battle"><span class="nav-icon battle-icon" aria-hidden="true">⚔</span><span>戦闘</span></button>
+      <button class="nav-button" type="button" data-screen="powerup"><span class="nav-icon upgrade-icon" aria-hidden="true">✦</span><span>強化</span></button>
+      <button class="nav-button" type="button" data-screen="formation"><span class="nav-icon formation-icon" aria-hidden="true">♟</span><span>編成</span></button>
+    </nav>
 
     <main class="main-panel">
-      <header class="topbar">
-        <div class="breadcrumb"><span>ねこねこ防衛隊</span><span class="breadcrumb-slash">/</span><strong id="page-label">ホーム</strong></div>
-        <div class="top-actions">
-          <div class="currency-chip"><span class="coin-icon" aria-hidden="true">✦</span><span id="coin-label">1,250</span></div>
-          <div class="header-note"><span class="header-note-dot"></span>防衛の準備はばっちり</div>
-        </div>
-      </header>
-
       <div class="screen-scroll">
         <section class="screen home-screen active" id="home-screen" aria-labelledby="home-heading">
           <div class="welcome-row">

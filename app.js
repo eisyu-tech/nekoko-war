@@ -18,7 +18,7 @@ const screens = {
   powerup: document.querySelector("#powerup-screen"),
   formation: document.querySelector("#formation-screen")
 };
-const screenContainer = document.querySelector(".screen-scroll");
+const screenContainer = document.querySelector(".main-panel");
 const pageLabel = document.querySelector("#page-label");
 const navButtons = [...document.querySelectorAll(".nav-button")];
 const coinLabels = [document.querySelector("#coin-label"), document.querySelector("#upgrade-coin-label")];
